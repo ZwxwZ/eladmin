@@ -815,6 +815,17 @@ CREATE TABLE `tool_qiniu_content` (
   UNIQUE KEY `uniq_name` (`name`)
 ) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='七牛云文件存储';
 
+CREATE TABLE vehicle_buy_record (
+        id INT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+        user_id bigint DEFAULT NULL COMMENT '用户id',
+        vehicle_type VARCHAR(255) DEFAULT NULL COMMENT '车辆类型',
+        license_plate VARCHAR(255) DEFAULT NULL COMMENT '车牌号码',
+        buy_time Datetime DEFAULT NULL COMMENT '购买时间',
+        source VARCHAR(255) DEFAULT NULL COMMENT '来源',
+        buy_type VARCHAR(255) DEFAULT NULL COMMENT '垫付方式',
+        price decimal DEFAULT NULL COMMENT '价格',
+        PRIMARY KEY (id) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='车辆收购管理表';
 -- ----------------------------
 -- Records of tool_qiniu_content
 -- ----------------------------
