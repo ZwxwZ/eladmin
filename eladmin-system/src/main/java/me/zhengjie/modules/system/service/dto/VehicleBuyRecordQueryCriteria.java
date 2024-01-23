@@ -37,7 +37,7 @@ public class VehicleBuyRecordQueryCriteria{
     @Query
     private Long userId;
 
-    @Query(propName = "username", type = Query.Type.INNER_LIKE, joinName = "user")
+    @Query(propName = "nickName", type = Query.Type.INNER_LIKE, joinName = "user")
     private String userName;
 
     /** 模糊 */
