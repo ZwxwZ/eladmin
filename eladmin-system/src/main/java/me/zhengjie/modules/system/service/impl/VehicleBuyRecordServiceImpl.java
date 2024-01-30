@@ -17,7 +17,11 @@ package me.zhengjie.modules.system.service.impl;
 
 import me.zhengjie.modules.system.domain.VehicleBuyRecord;
 import me.zhengjie.modules.system.service.UserService;
+import me.zhengjie.service.LocalStorageService;
+import me.zhengjie.service.dto.LocalStorageDto;
+import me.zhengjie.service.dto.LocalStorageQueryCriteria;
 import me.zhengjie.utils.PageResult;
+import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +30,23 @@ import me.zhengjie.modules.system.service.VehicleBuyRecordService;
 import me.zhengjie.modules.system.service.dto.VehicleBuyRecordDto;
 import me.zhengjie.modules.system.service.dto.VehicleBuyRecordQueryCriteria;
 import me.zhengjie.modules.system.service.mapstruct.VehicleBuyRecordMapper;
+import org.apache.commons.collections4.SetUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
+
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
 
 /**
 * @website https://eladmin.vip
@@ -52,12 +61,21 @@ public class VehicleBuyRecordServiceImpl implements VehicleBuyRecordService {
     private final VehicleBuyRecordRepository vehicleBuyRecordRepository;
     private final VehicleBuyRecordMapper vehicleBuyRecordMapper;
 
-    private final UserService userService;
+    private final LocalStorageService localStorageService;
 
     @Override
     public PageResult<VehicleBuyRecordDto> queryAll(VehicleBuyRecordQueryCriteria criteria, Pageable pageable){
         Page<VehicleBuyRecord> page = vehicleBuyRecordRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(vehicleBuyRecordMapper::toDtoWithDetails));
+        return PageUtil.toPage(page.map(vehicleBuyRecordMapper::toDtoWithDetails).map(dto -> {
+            if (StringUtils.isNotBlank(dto.getImgPath())) {
+                LocalStorageQueryCriteria queryCriteria = new LocalStorageQueryCriteria();
+                HashSet<Long> ids = Arrays.stream(StringUtils.split(dto.getImgPath(), ",")).map(Long::parseLong).collect(Collectors.toCollection(HashSet::new));
+                queryCriteria.setIds(ids);
+                List<LocalStorageDto> storageDtoList = localStorageService.queryAll(queryCriteria);
+                dto.setLocalStorages(storageDtoList);
+            }
+            return dto;
+        }));
     }
 
     @Override
@@ -107,6 +125,7 @@ public class VehicleBuyRecordServiceImpl implements VehicleBuyRecordService {
             map.put("车牌号码", vehicleBuyRecord.getLicensePlate());
             map.put("购买时间", vehicleBuyRecord.getBuyTime());
             map.put("垫付方式", vehicleBuyRecord.getBuyType());
+            map.put("图片id", vehicleBuyRecord.getImgPath());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

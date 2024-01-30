@@ -78,6 +78,10 @@ public class VehicleBuyRecord implements Serializable {
     @ApiModelProperty(value = "垫付方式")
     private String buyType;
 
+    @Column(name = "`img_path`")
+    @ApiModelProperty(value = "逗号拼接，文件存储的id")
+    private String imgPath;
+
     public void copy(VehicleBuyRecord source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }

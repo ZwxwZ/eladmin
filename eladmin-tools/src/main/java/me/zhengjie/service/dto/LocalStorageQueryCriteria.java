@@ -17,7 +17,9 @@ package me.zhengjie.service.dto;
 
 import lombok.Data;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import me.zhengjie.annotation.Query;
 
@@ -30,6 +32,12 @@ public class LocalStorageQueryCriteria{
 
     @Query(blurry = "name,suffix,type,createBy,size")
     private String blurry;
+
+    @Query(type = Query.Type.EQUAL, propName = "id")
+    private String id;
+
+    @Query(propName = "id", type = Query.Type.IN)
+    private Set<Long> ids = new HashSet<>();
 
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;

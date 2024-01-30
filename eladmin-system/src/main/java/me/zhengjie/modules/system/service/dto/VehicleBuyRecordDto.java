@@ -16,9 +16,14 @@
 package me.zhengjie.modules.system.service.dto;
 
 import lombok.Data;
+import me.zhengjie.domain.LocalStorage;
+import me.zhengjie.service.dto.LocalStorageDto;
+
 import java.sql.Timestamp;
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @website https://eladmin.vip
@@ -56,4 +61,8 @@ public class VehicleBuyRecordDto implements Serializable {
 
     /** 垫付方式 */
     private String buyType;
+
+    private String imgPath;
+
+    private List<LocalStorageDto> localStorages;
 }

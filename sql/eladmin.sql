@@ -824,6 +824,7 @@ CREATE TABLE vehicle_buy_record (
         source VARCHAR(255) DEFAULT NULL COMMENT '来源',
         buy_type VARCHAR(255) DEFAULT NULL COMMENT '垫付方式',
         price decimal DEFAULT NULL COMMENT '价格',
+        img_path VARCHAR(255) DEFAULT NULL COMMENT '图片地址,逗号拼接',
         PRIMARY KEY (id) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='车辆收购管理表';
 -- ----------------------------
