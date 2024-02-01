@@ -41,7 +41,8 @@ public interface VehicleBuyRecordMapper extends BaseMapper<VehicleBuyRecordDto, 
         VehicleBuyRecordDto userDto = this.toDto(record);
 
         User u = Optional.ofNullable(record.getUser()).orElse(new User());
-        userDto.setUserName(u.getUsername());
+        userDto.setUserId(u.getId());
+        userDto.setUserName(u.getNickName());
         userDto.setDepartment(Optional.ofNullable(u.getDept()).orElse(new Dept()).getName());
         return userDto;
     }
